@@ -1,0 +1,2 @@
+### Get all customers by invoking the customers applications
+GET http://localhost:8082/api/customers
