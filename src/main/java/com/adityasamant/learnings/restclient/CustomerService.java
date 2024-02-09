@@ -13,7 +13,7 @@ public class CustomerService {
         this.restClient = builder.baseUrl(customerServiceUrl).build();
     }
 
-    public String findAllCustomers() {
-        return restClient.get().uri("/api/customers").retrieve().body(String.class);
+    public String findAllCustomers(String user) {
+        return restClient.get().uri("/api/customers").header("user", user).retrieve().body(String.class);
     }
 }
