@@ -28,6 +28,22 @@ class CustomerServiceClientTest {
     ObjectMapper objectMapper;
 
     @Test
+    void shouldFindAllCustomers() throws JsonProcessingException {
+        // given
+        String customers = "[{\"id\":1,\"firstName\":\"John\",\"lastName\":\"Doe\",\"country\":\"Australia\"}," +
+                "{\"id\":2,\"firstName\":\"Alice\",\"lastName\":\"Smith\",\"country\":\"USA\"}," +
+                "{\"id\":3,\"firstName\":\"Bob\",\"lastName\":\"Stevens\",\"country\":\"England\"}]";
+
+        // when
+        server.expect(requestTo("http://localhost:8081/api/customers")).
+                andRespond(withSuccess(customers, null));
+
+        // then
+        String response = customerServiceClient.findAllCustomers("debug");
+        assertEquals(customers, response);
+
+    }
+    @Test
     void shouldFindAllCustomersAsList() throws JsonProcessingException {
         // given
         List<Customer> customers = List.of(new Customer(1, "John", "Doe", "Australia"),
