@@ -28,7 +28,7 @@ class CustomerServiceClientTest {
     ObjectMapper objectMapper;
 
     @Test
-    void shouldFindAllCustomers() throws JsonProcessingException {
+    void shouldFindAllCustomers() {
         // given
         String customers = "[{\"id\":1,\"firstName\":\"John\",\"lastName\":\"Doe\",\"country\":\"Australia\"}," +
                 "{\"id\":2,\"firstName\":\"Alice\",\"lastName\":\"Smith\",\"country\":\"USA\"}," +

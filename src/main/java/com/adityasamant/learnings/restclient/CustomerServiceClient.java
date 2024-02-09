@@ -3,12 +3,13 @@ package com.adityasamant.learnings.restclient;
 import com.adityasamant.learnings.customers.model.Customer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
-@Service
+@Component
 public class CustomerServiceClient {
 
     private final RestClient restClient;
