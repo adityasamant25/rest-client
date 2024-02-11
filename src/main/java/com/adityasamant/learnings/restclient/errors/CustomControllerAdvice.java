@@ -1,5 +1,6 @@
 package com.adityasamant.learnings.restclient.errors;
 
+import com.adityasamant.learnings.restclient.exceptions.CustomerServiceAuthorizationException;
 import com.adityasamant.learnings.restclient.exceptions.CustomerServiceConnectionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,49 +14,32 @@ class CustomControllerAdvice {
 
     // Handle a CustomerServiceConnectionException
     @ExceptionHandler(CustomerServiceConnectionException.class)
-    public ResponseEntity<ErrorResponse> handleCustomerServiceConnectionException(
-            Exception e
-    ) {
-        HttpStatus status = HttpStatus.BAD_GATEWAY; // 502
-
+    public ResponseEntity<ErrorResponse> handleCustomerServiceConnectionException(Exception e) {
         // converting the stack trace to String
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        e.printStackTrace(printWriter);
-        String stackTrace = stringWriter.toString();
+        return getResponseEntity(e, HttpStatus.BAD_GATEWAY); // 502
+    }
 
-        return new ResponseEntity<>(
-                new ErrorResponse(
-                        status,
-                        e.getMessage(),
-                        stackTrace // assuming to be in staging environment, otherwise stackTrace should not be valorized
-                ),
-                status
-        );
+    // Handle a CustomerServiceConnectionException
+    @ExceptionHandler(CustomerServiceAuthorizationException.class)
+    public ResponseEntity<ErrorResponse> handleCustomerServiceAuthorizationException(Exception e) {
+        // converting the stack trace to String
+        return getResponseEntity(e, HttpStatus.FORBIDDEN); // 403
     }
 
     // fallback method
     @ExceptionHandler(Exception.class) // exception handled
-    public ResponseEntity<ErrorResponse> handleExceptions(
-            Exception e
-    ) {
-        // ... potential custom logic
-
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR; // 500
-
+    public ResponseEntity<ErrorResponse> handleExceptions(Exception e) {
         // converting the stack trace to String
+        return getResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR); // 500
+    }
+
+    private static ResponseEntity<ErrorResponse> getResponseEntity(Exception e, HttpStatus status) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
         String stackTrace = stringWriter.toString();
 
-        return new ResponseEntity<>(
-                new ErrorResponse(
-                        status,
-                        e.getMessage(),
-                        stackTrace // specifying the stack trace in case of 500s
-                ),
-                status
-        );
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace), status);
+        // assuming to be in staging environment, otherwise stackTrace should not be displayed
     }
 }
