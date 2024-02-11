@@ -2,6 +2,8 @@ package com.adityasamant.learnings.restclient.controller;
 
 import com.adityasamant.learnings.customers.model.Customer;
 import com.adityasamant.learnings.restclient.CustomerServiceClient;
+import com.adityasamant.learnings.restclient.exceptions.CustomerServiceAuthorizationException;
+import com.adityasamant.learnings.restclient.exceptions.CustomerServiceConnectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(RestClientController.class)
-//@RestClientTest(CustomerServiceClient.class)
 class RestClientControllerTest {
 
     @Autowired
@@ -78,5 +79,77 @@ class RestClientControllerTest {
 
         // then
         mvc.perform(get("/api/customers/list").header("user", "debug")).andExpect(status().isOk()).andExpect(content().json(customers));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCustomerServiceDeniesConnection() throws Exception {
+        // when
+        when(client.findAllCustomers(null)).thenThrow(CustomerServiceConnectionException.class);
+
+        // then
+        mvc.perform(get("/api/customers")).andExpect(status().isBadGateway());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCustomerServiceDeniesConnectionWithHeader() throws Exception {
+        // when
+        when(client.findAllCustomers("debug")).thenThrow(CustomerServiceConnectionException.class);
+
+        // then
+        mvc.perform(get("/api/customers").header("user", "debug")).andExpect(status().isBadGateway());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCustomerServiceDeniesConnectionWithList() throws Exception {
+        // when
+        when(client.findAllCustomersAsList(null)).thenThrow(CustomerServiceConnectionException.class);
+
+        // then
+        mvc.perform(get("/api/customers/list")).andExpect(status().isBadGateway());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCustomerServiceDeniesConnectionWithHeaderWithList() throws Exception {
+        // when
+        when(client.findAllCustomersAsList("debug")).thenThrow(CustomerServiceConnectionException.class);
+
+        // then
+        mvc.perform(get("/api/customers/list").header("user", "debug")).andExpect(status().isBadGateway());
+    }
+
+    @Test
+    void shouldThrowRBACExceptionWhenCustomerServiceDeniesAuthorization() throws Exception {
+        // when
+        when(client.findAllCustomers(null)).thenThrow(CustomerServiceAuthorizationException.class);
+
+        // then
+        mvc.perform(get("/api/customers")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldThrowRBACExceptionWhenCustomerServiceDeniesAuthorizationWithHeader() throws Exception {
+        // when
+        when(client.findAllCustomers("debug")).thenThrow(CustomerServiceAuthorizationException.class);
+
+        // then
+        mvc.perform(get("/api/customers").header("user", "debug")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldThrowRBACExceptionWhenCustomerServiceDeniesAuthorizationWithList() throws Exception {
+        // when
+        when(client.findAllCustomersAsList(null)).thenThrow(CustomerServiceAuthorizationException.class);
+
+        // then
+        mvc.perform(get("/api/customers/list")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldThrowRBACExceptionWhenCustomerServiceDeniesAuthorizationWithHeaderWithList() throws Exception {
+        // when
+        when(client.findAllCustomersAsList("debug")).thenThrow(CustomerServiceAuthorizationException.class);
+
+        // then
+        mvc.perform(get("/api/customers/list").header("user", "debug")).andExpect(status().isForbidden());
     }
 }
