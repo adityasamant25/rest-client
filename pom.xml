@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.adityasamant.learnings</groupId>
     <artifactId>rest-client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>rest-client</name>
     <description>rest-client</description>
     <properties>

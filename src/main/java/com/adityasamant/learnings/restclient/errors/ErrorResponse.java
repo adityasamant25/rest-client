@@ -52,18 +52,4 @@ public class ErrorResponse {
         this.stackTrace = stackTrace;
     }
 
-    public ErrorResponse(
-            HttpStatus httpStatus,
-            String message,
-            String stackTrace,
-            Object data
-    ) {
-        this(
-                httpStatus,
-                message,
-                stackTrace
-        );
-
-        this.data = data;
-    }
 }
