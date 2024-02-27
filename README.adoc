@@ -1,0 +1,122 @@
+= C-REST !
+:experimental:
+
+C-REST is a project developed using Spring Boot. +
+It is meant to be used together with the Simply Customers ! project. +
+It acts as a REST client for the Simply Customers ! project and is based on the new RestClient in Spring Framework 6.1.x. +
+C-REST and Simply Customers ! can be used together in order to test simple scenarios for communication between microservices.
+
+This project is built with the latest Java LTS release (Java 21) and is always up-to-date with the latest Spring Boot version.
+
+The project is accompanied by a host of Junit test cases which ensure its health.
+
+The Docker images built for this application are multi-architecture compliant images. These images can seamlessly work with both x86 and ARM CPU architectures.
+
+== Use Cases
+
+* Spin-up a set of microservices that act as a client and server in a matter of seconds
+* Run on a local JVM, Docker or Kubernetes
+
+== What's New?
+
+Version 1.0.1
+
+* Base image for docker is changed to `bellsoft/liberica-runtime-container:jdk-21-slim-musl` to reduce the size
+* Upgraded to Spring Boot 3.2.3
+
+== Quick Start
+
+=== Run on Local
+
+==== Prerequisites
+* Java 21
+* Maven 3.9.x +
+* Set up the Simply Customers ! application following the steps mentioned https://github.com/adityasamant25/customers?tab=readme-ov-file#run-on-local[here]
+
+.Clone
+[,console]
+----
+git clone https://github.com/adityasamant25/rest-client.git
+----
+
+.Build
+[,console]
+----
+cd rest-client
+mvn clean install
+----
+
+.Run
+[,console]
+----
+java -jar target/rest-client-1.0.1.jar
+----
+
+.Access from a terminal
+[,console]
+----
+curl localhost:8082/api/customers
+----
+
+.Access from a browser
+http://localhost:8082/api/customers
+
+.Cleanup
+Terminate the application using kbd:[Ctrl+C] on the terminal running the process.
+
+=== Run on Docker
+
+==== Prerequisite
+A running Docker Engine. Docker Desktop is preferred for local development.
+
+.Run
+[,console]
+----
+docker compose up
+----
+
+.Access from a terminal
+[,console]
+----
+curl localhost:8082/api/customers
+----
+
+.Access from a browser
+http://localhost:8082/api/customers
+
+.Cleanup
+Terminate the application using kbd:[Ctrl+C] on the terminal running the process.
+
+=== Run on Kubernetes
+
+==== Prerequisite
+A running Kubernetes cluster. To quickly spin-up a local Kubernetes cluster, https://minikube.sigs.k8s.io/docs/start/[minikube] is a great choice.
+
+.Run
+[,console]
+----
+kubectl apply -f https://raw.githubusercontent.com/adityasamant25/rest-client/main/kubernetes.yaml
+----
+
+.Start a minikube tunnel
+[,console]
+----
+minikube service rest-client --url
+----
+
+.Access from a new terminal
+[,console]
+----
+curl <minikube service url>/api/customers
+----
+
+.Access from a browser
+\http://<minikube service url>/api/customers
+
+.Cleanup
+[,console]
+----
+kubectl delete svc customers rest-client
+kubectl delete deployment customer rest-client
+----
+Terminate the `minikube tunnel` using kbd:[Ctrl+C] on the terminal running it.
