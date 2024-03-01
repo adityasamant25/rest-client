@@ -1,7 +1,7 @@
 = C-REST !
 :experimental:
 
-C-REST is a project developed using Spring Boot. +
+C-REST (pronounced _crest_) is a project developed using Spring Boot. +
 It is meant to be used together with the Simply Customers ! project. +
 It acts as a REST client for the Simply Customers ! project and is based on the new RestClient in Spring Framework 6.1.x. +
 C-REST and Simply Customers ! can be used together in order to test simple scenarios for communication between microservices.
